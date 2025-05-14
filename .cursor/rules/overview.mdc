@@ -6,8 +6,8 @@ alwaysApply: true
 # Project overview
 
 We are building a super-simple voxel model editor called "MegaVoxel".
-The user can choose between 8 pre-configured colors (palette).
-The user can choose between two modes: add/erase.
+The user can choose between a configured color palette.
+In addition the color palette, there is also choose an "erase" button.
 
 When creating a new model, the editor starts with a 9x9x9 block.
 Each voxel should have the initail color of the first color in the palette.
@@ -20,7 +20,6 @@ The user can erase voxels to give shape to the model.
 ```
 import { MegaVoxel } from megavoxel;
 const editor = new MegaVoxel(
-    background: 0xfdf0ee,
     palette: [0xffffff, 0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff, 0x222222],
     onModelUpdated: ...
 );
@@ -52,8 +51,8 @@ No other dependencies.
 
 ## Input
 
-- Color picker consisting of 3 on-screen buttons
-- Mode picker (add/erase)
+- Color picker consisting of on-screen buttons
+- Erase button (last item in the the color buttons list)
 - Mouse click/touch to add/remove voxels
 - Dragging rotates the camera around the center/model
 

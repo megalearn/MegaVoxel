@@ -30,41 +30,29 @@
         height: 30px;
         border: 2px solid white;
         border-radius: 4px;
-        margin: 5px;
+        margin: 0;
         cursor: pointer;
       }
       .color-btn.active {
         border-color: yellow;
         box-shadow: 0 0 10px yellow;
       }
-      .mode-btn {
-        background: #444;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        margin: 5px;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      .mode-btn.active {
-        background: #666;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-      }
       .color-grid {
         display: grid;
         grid-template-columns: repeat(4, auto);
-        gap: 5px;
-        margin-top: 10px;
+        gap: 10px;
+      }
+      .no-select {
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
       }
     </style>
   </head>
   <body>
     <div id="app"></div>
     <div id="controls">
-      <div>
-        <button class="mode-btn active" data-mode="add">Add</button>
-        <button class="mode-btn" data-mode="erase">Erase</button>
-      </div>
       <div class="color-grid">
         <button class="color-btn active" data-color="0" style="background: #F2F2F2;"></button>
         <button class="color-btn" data-color="1" style="background: #FFA094;"></button>
@@ -73,6 +61,9 @@
         <button class="color-btn" data-color="4" style="background: #018E01;"></button>
         <button class="color-btn" data-color="5" style="background: #026522;"></button>
         <button class="color-btn" data-color="6" style="background: #020403;"></button>
+        <button class="color-btn" data-mode="erase" style="background: #444; position: relative;">
+          <span class="no-select" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white;">✕</span>
+        </button>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>

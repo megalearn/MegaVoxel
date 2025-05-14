@@ -66,45 +66,36 @@ requestAnimationFrame(() => {
 
 // Set up UI controls
 const setupUIControls = () => {
-  // Mode buttons
-  const modeButtons = document.querySelectorAll('.mode-btn');
-  const addButton = document.querySelector('[data-mode="add"]') as HTMLButtonElement;
-  const eraseButton = document.querySelector('[data-mode="erase"]') as HTMLButtonElement;
   const colorButtons = document.querySelectorAll('.color-btn');
+  const eraseButton = document.querySelector('[data-mode="erase"]') as HTMLButtonElement;
 
-  const setMode = (mode: 'add' | 'erase') => {
-    modeButtons.forEach(btn => btn.classList.remove('active'));
-    if (mode === 'add') {
-      addButton.classList.add('active');
-    } else {
+  const setMode = (mode: 'add' | 'erase', colorIndex?: number) => {
+    colorButtons.forEach(btn => btn.classList.remove('active'));
+    
+    if (mode === 'add' && colorIndex !== undefined) {
+      const colorButton = document.querySelector(`[data-color="${colorIndex}"]`) as HTMLButtonElement;
+      if (colorButton) colorButton.classList.add('active');
+    } else if (mode === 'erase') {
       eraseButton.classList.add('active');
-      // Deselect color when erase mode is chosen
-      colorButtons.forEach(btn => btn.classList.remove('active'));
     }
+    
     editor.setMode(mode);
   };
-
-  modeButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-      const target = e.target as HTMLButtonElement;
-      const mode = target.dataset.mode as 'add' | 'erase';
-      setMode(mode);
-    });
-  });
 
   // Color buttons
   colorButtons.forEach(button => {
     button.addEventListener('click', (e) => {
-      const target = e.target as HTMLButtonElement;
-      const colorIndex = parseInt(target.dataset.color || '0', 10);
+      // Get the actual button element, even if a child element was clicked
+      const target = (e.target as HTMLElement).closest('.color-btn') as HTMLButtonElement;
+      if (!target) return;
       
-      colorButtons.forEach(btn => btn.classList.remove('active'));
-      target.classList.add('active');
-      
-      // Automatically switch to add mode when color is selected
-      setMode('add');
-      
-      editor.setColor(colorIndex);
+      if (target.dataset.mode === 'erase') {
+        setMode('erase');
+      } else {
+        const colorIndex = parseInt(target.dataset.color || '0', 10);
+        setMode('add', colorIndex);
+        editor.setColor(colorIndex);
+      }
     });
   });
 };
