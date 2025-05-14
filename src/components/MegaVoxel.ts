@@ -27,6 +27,8 @@ export class MegaVoxel extends THREE.Object3D {
   private isDragging: boolean = false;
   private dragStartPosition: { x: number; y: number } | null = null;
   private readonly dragThreshold = 5; // pixels
+  private hoveredMesh: THREE.Mesh | null = null;
+  private originalEmissive: number | null = null;
 
   constructor(options: MegaVoxelOptions) {
     super();
@@ -90,6 +92,23 @@ export class MegaVoxel extends THREE.Object3D {
 
   private onMouseMove(event: MouseEvent): void {
     this.updateMousePosition(event);
+    
+    // Reset previous hover state
+    if (this.hoveredMesh && this.originalEmissive !== null) {
+      (this.hoveredMesh.material as THREE.MeshPhongMaterial).emissive.setHex(this.originalEmissive);
+      this.hoveredMesh = null;
+      this.originalEmissive = null;
+    }
+
+    // Find new hover target
+    const intersection = this.getIntersection();
+    if (intersection) {
+      const mesh = intersection.object as THREE.Mesh;
+      this.hoveredMesh = mesh;
+      const material = mesh.material as THREE.MeshPhongMaterial;
+      this.originalEmissive = material.emissive.getHex();
+      material.emissive.setHex(0x444444);
+    }
   }
 
   private onMouseUp(event: MouseEvent): void {
@@ -102,16 +121,16 @@ export class MegaVoxel extends THREE.Object3D {
 
     // Only process as a click if the drag distance is small
     if (dragDistance < this.dragThreshold) {
-      this.handleVoxelOperation(event);
+      this.handleVoxelOperation();
     }
 
     this.isDragging = false;
     this.dragStartPosition = null;
   }
 
-  private handleVoxelOperation(event: MouseEvent): void {
+  private handleVoxelOperation(): void {
     console.log('Click event received');
-    this.updateMousePosition(event);
+    // No need to update mouse position here as it's already updated in onMouseMove
     const intersection = this.getIntersection();
     
     console.log('Intersection:', intersection);
@@ -220,6 +239,13 @@ export class MegaVoxel extends THREE.Object3D {
       this.domElement.removeEventListener('mousedown', this.onMouseDown);
       this.domElement.removeEventListener('mousemove', this.onMouseMove);
       this.domElement.removeEventListener('mouseup', this.onMouseUp);
+    }
+
+    // Reset hover state
+    if (this.hoveredMesh && this.originalEmissive !== null) {
+      (this.hoveredMesh.material as THREE.MeshPhongMaterial).emissive.setHex(this.originalEmissive);
+      this.hoveredMesh = null;
+      this.originalEmissive = null;
     }
 
     // Dispose of all geometries and materials
