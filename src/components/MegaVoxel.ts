@@ -33,6 +33,7 @@ export class MegaVoxel extends THREE.Object3D {
     this.palette = options.palette;
     this.camera = options.camera;
     this.onModelUpdated = options.onModelUpdated;
+    
     this.voxels = new Map();
     this.meshes = new Map();
     this.currentColor = 0;

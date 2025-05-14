@@ -29,3 +29,4 @@
 ## More tweaks
 - [ ] Variable size color palette
 - [x] Automatically choose "Add mode" if a color is chosen (erase button deselects any selected color)
+- [x] Make background color part of the configuration/parameters, and change it to #FDF0EE

@@ -4,7 +4,7 @@ import { CameraControls } from './utils/CameraControls';
 
 // Initialize Three.js scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x333333); // Dark gray background
+scene.background = new THREE.Color(0xFDF0EE);
 
 // Add lights
 const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft white light
@@ -30,7 +30,7 @@ container.appendChild(renderer.domElement);
 // Set up camera controls
 const controls = new CameraControls(camera, renderer.domElement);
 
-// Define the 8-color palette
+// Define the color palette
 const palette = [
   0xF2F2F2, // light gray
   0xFFA094, // light coral
