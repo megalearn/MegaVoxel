@@ -14,7 +14,7 @@
 
 ## Core Features
 - [x] Basic 3D viewport
-- [ ] Camera controls
+- [x] Camera controls
 - [ ] Voxel placement
 - [ ] Voxel deletion
 - [ ] Color selection

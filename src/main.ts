@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { MegaVoxel } from './components/MegaVoxel';
+import { CameraControls } from './utils/CameraControls';
 
 // Initialize Three.js scene
 const scene = new THREE.Scene();
@@ -22,12 +23,17 @@ camera.lookAt(0, 0, 0);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
-document.getElementById('app')?.appendChild(renderer.domElement);
+const container = document.getElementById('app');
+if (!container) throw new Error('Could not find app container');
+container.appendChild(renderer.domElement);
+
+// Set up camera controls
+const controls = new CameraControls(camera, renderer.domElement);
 
 // Create editor instance
 const editor = new MegaVoxel({
   palette: [0xff0000, 0x00ff00, 0x0000ff],
-  onModelUpdated: (model) => {
+  onModelUpdated: (model: { palette: string[], voxels: Array<{ x: number, y: number, z: number, color: number }> }) => {
     console.log('Model updated:', model);
   }
 });
@@ -47,6 +53,7 @@ window.addEventListener('resize', () => {
 // Animation loop
 function animate() {
   requestAnimationFrame(animate);
+  controls.update();
   renderer.render(scene, camera);
 }
 

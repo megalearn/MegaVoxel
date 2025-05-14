@@ -54,7 +54,7 @@ No other dependencies.
 - Color picker consisting of 3 on-screen buttons
 - Mode picker (add/erase)
 - Mouse click/touch to add/remove voxels
-- Right-mouse button + drag rotates the camera around the center/model
+- Dragging rotates the camera around the center/model
 
 The editor should have a similar feel to building things in Minecraft.
 
