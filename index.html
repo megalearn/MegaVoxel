@@ -50,6 +50,12 @@
         background: #666;
         box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
       }
+      .color-grid {
+        display: grid;
+        grid-template-columns: repeat(4, auto);
+        gap: 5px;
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
@@ -59,10 +65,15 @@
         <button class="mode-btn active" data-mode="add">Add</button>
         <button class="mode-btn" data-mode="erase">Erase</button>
       </div>
-      <div style="margin-top: 10px;">
-        <button class="color-btn active" data-color="0" style="background: #ff0000;"></button>
-        <button class="color-btn" data-color="1" style="background: #00ff00;"></button>
-        <button class="color-btn" data-color="2" style="background: #0000ff;"></button>
+      <div class="color-grid">
+        <button class="color-btn active" data-color="0" style="background: #ffffff;"></button>
+        <button class="color-btn" data-color="1" style="background: #ff0000;"></button>
+        <button class="color-btn" data-color="2" style="background: #00ff00;"></button>
+        <button class="color-btn" data-color="3" style="background: #0000ff;"></button>
+        <button class="color-btn" data-color="4" style="background: #ffff00;"></button>
+        <button class="color-btn" data-color="5" style="background: #ff00ff;"></button>
+        <button class="color-btn" data-color="6" style="background: #00ffff;"></button>
+        <button class="color-btn" data-color="7" style="background: #222222;"></button>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>

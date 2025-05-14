@@ -6,12 +6,12 @@ alwaysApply: true
 # Project overview
 
 We are building a super-simple voxel model editor called "MegaVoxel".
-The user can choose between 3 pre-configured colors (palette).
+The user can choose between 8 pre-configured colors (palette).
 The user can choose between two modes: add/erase.
 
 When creating a new model, the editor starts with a 9x9x9 block.
 Each voxel should have the initail color of the first color in the palette.
-The user can erase voxels to give stshape
+The user can erase voxels to give shape to the model.
 
 ## Usage
 
@@ -20,7 +20,7 @@ The user can erase voxels to give stshape
 ```
 import { MegaVoxel } from megavoxel;
 const editor = new MegaVoxel(
-    palette: [0xff0000, 0x00ff00, 0x0000ff]
+    palette: [0xffffff, 0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff, 0x222222]
     onModelUpdated: ...
 );
 scene.add(editor);
@@ -32,7 +32,7 @@ The output format is JSON.
 
 ```
 {
-    palette: ["0xff0000", "0x00ff00", "0x0000ff"],
+    palette: ["0xffffff", "0xff0000", "0x00ff00", "0x0000ff", "0xffff00", "0xff00ff", "0x00ffff", "0x222222"]
     voxels: [
         {x: .., y: .., z: .., color: 0},
         {x: .., y: .., z: .., color: 1},

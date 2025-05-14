@@ -18,3 +18,10 @@
 - [x] Voxel placement
 - [x] Voxel deletion
 - [x] Color selection
+
+## Tweaks
+- [x] Update to 8 color palette
+
+## Bugs
+- [x] Voxel should not be added/erased on drag end
+- [x] Prevent more than one voxel to be added/removed at a time

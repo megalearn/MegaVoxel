@@ -24,6 +24,9 @@ export class MegaVoxel extends THREE.Object3D {
   private mouse: THREE.Vector2;
   public domElement: HTMLElement;
   private camera: THREE.Camera;
+  private isDragging: boolean = false;
+  private dragStartPosition: { x: number; y: number } | null = null;
+  private readonly dragThreshold = 5; // pixels
 
   constructor(options: MegaVoxelOptions) {
     super();
@@ -60,11 +63,13 @@ export class MegaVoxel extends THREE.Object3D {
     }
 
     // Bind the methods to preserve 'this' context
-    this.onClick = this.onClick.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
 
-    this.domElement.addEventListener('click', this.onClick);
+    this.domElement.addEventListener('mousedown', this.onMouseDown);
     this.domElement.addEventListener('mousemove', this.onMouseMove);
+    this.domElement.addEventListener('mouseup', this.onMouseUp);
     
     console.log('Interaction setup complete');
   }
@@ -77,7 +82,33 @@ export class MegaVoxel extends THREE.Object3D {
     this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
   }
 
-  private onClick(event: MouseEvent): void {
+  private onMouseDown(event: MouseEvent): void {
+    this.isDragging = true;
+    this.dragStartPosition = { x: event.clientX, y: event.clientY };
+  }
+
+  private onMouseMove(event: MouseEvent): void {
+    this.updateMousePosition(event);
+  }
+
+  private onMouseUp(event: MouseEvent): void {
+    if (!this.isDragging || !this.dragStartPosition) return;
+
+    // Calculate drag distance
+    const dx = event.clientX - this.dragStartPosition.x;
+    const dy = event.clientY - this.dragStartPosition.y;
+    const dragDistance = Math.sqrt(dx * dx + dy * dy);
+
+    // Only process as a click if the drag distance is small
+    if (dragDistance < this.dragThreshold) {
+      this.handleVoxelOperation(event);
+    }
+
+    this.isDragging = false;
+    this.dragStartPosition = null;
+  }
+
+  private handleVoxelOperation(event: MouseEvent): void {
     console.log('Click event received');
     this.updateMousePosition(event);
     const intersection = this.getIntersection();
@@ -96,11 +127,6 @@ export class MegaVoxel extends THREE.Object3D {
       const voxelPos = this.worldToGrid(point);
       this.addVoxel(voxelPos.x, voxelPos.y, voxelPos.z, this.currentColor);
     }
-  }
-
-  private onMouseMove(event: MouseEvent): void {
-    this.updateMousePosition(event);
-    // TODO: Add hover effect later
   }
 
   private getIntersection(): THREE.Intersection | null {
@@ -188,8 +214,9 @@ export class MegaVoxel extends THREE.Object3D {
 
   public dispose(): void {
     if (this.domElement) {
-      this.domElement.removeEventListener('click', this.onClick);
+      this.domElement.removeEventListener('mousedown', this.onMouseDown);
       this.domElement.removeEventListener('mousemove', this.onMouseMove);
+      this.domElement.removeEventListener('mouseup', this.onMouseUp);
     }
 
     // Dispose of all geometries and materials

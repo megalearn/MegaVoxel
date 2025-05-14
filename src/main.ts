@@ -30,9 +30,21 @@ container.appendChild(renderer.domElement);
 // Set up camera controls
 const controls = new CameraControls(camera, renderer.domElement);
 
+// Define the 8-color palette
+const palette = [
+  0xffffff, // white
+  0xff0000, // red
+  0x00ff00, // green
+  0x0000ff, // blue
+  0xffff00, // yellow
+  0xff00ff, // magenta
+  0x00ffff, // cyan
+  0x222222  // dark gray
+];
+
 // Create editor instance
 const editor = new MegaVoxel({
-  palette: [0xff0000, 0x00ff00, 0x0000ff],
+  palette: palette,
   camera: camera,
   onModelUpdated: (model: { palette: string[], voxels: Array<{ x: number, y: number, z: number, color: number }> }) => {
     console.log('Model updated:', model);
