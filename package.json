@@ -1,0 +1,30 @@
+{
+  "name": "megavoxel",
+  "version": "1.0.0",
+  "description": "Super-simple voxel editor",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/megalearn/MegaVoxel.git"
+  },
+  "keywords": ["voxel", "editor", "three.js"],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/megalearn/MegaVoxel/issues"
+  },
+  "homepage": "https://github.com/megalearn/MegaVoxel#readme",
+  "devDependencies": {
+    "@types/three": "^0.176.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "three": "^0.176.0"
+  }
+}
