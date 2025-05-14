@@ -10,15 +10,61 @@
         overflow: hidden;
         width: 100vw;
         height: 100vh;
+        font-family: Arial, sans-serif;
       }
       #app {
         width: 100%;
         height: 100%;
       }
+      #controls {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 15px;
+        border-radius: 8px;
+        color: white;
+      }
+      .color-btn {
+        width: 30px;
+        height: 30px;
+        border: 2px solid white;
+        border-radius: 4px;
+        margin: 5px;
+        cursor: pointer;
+      }
+      .color-btn.active {
+        border-color: yellow;
+        box-shadow: 0 0 10px yellow;
+      }
+      .mode-btn {
+        background: #444;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        margin: 5px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .mode-btn.active {
+        background: #666;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
     </style>
   </head>
   <body>
     <div id="app"></div>
+    <div id="controls">
+      <div>
+        <button class="mode-btn active" data-mode="add">Add</button>
+        <button class="mode-btn" data-mode="erase">Erase</button>
+      </div>
+      <div style="margin-top: 10px;">
+        <button class="color-btn active" data-color="0" style="background: #ff0000;"></button>
+        <button class="color-btn" data-color="1" style="background: #00ff00;"></button>
+        <button class="color-btn" data-color="2" style="background: #0000ff;"></button>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html> 

@@ -33,12 +33,58 @@ const controls = new CameraControls(camera, renderer.domElement);
 // Create editor instance
 const editor = new MegaVoxel({
   palette: [0xff0000, 0x00ff00, 0x0000ff],
+  camera: camera,
   onModelUpdated: (model: { palette: string[], voxels: Array<{ x: number, y: number, z: number, color: number }> }) => {
     console.log('Model updated:', model);
   }
 });
 
+// Add editor to scene
 scene.add(editor);
+
+// Wait for canvas to be available
+requestAnimationFrame(() => {
+  const canvas = document.querySelector('canvas');
+  if (canvas) {
+    editor.domElement = canvas;
+    editor.setupInteraction();
+  } else {
+    console.error('Canvas not found for editor interaction');
+  }
+});
+
+// Set up UI controls
+const setupUIControls = () => {
+  // Mode buttons
+  const modeButtons = document.querySelectorAll('.mode-btn');
+  modeButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      const target = e.target as HTMLButtonElement;
+      const mode = target.dataset.mode as 'add' | 'erase';
+      
+      modeButtons.forEach(btn => btn.classList.remove('active'));
+      target.classList.add('active');
+      
+      editor.setMode(mode);
+    });
+  });
+
+  // Color buttons
+  const colorButtons = document.querySelectorAll('.color-btn');
+  colorButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      const target = e.target as HTMLButtonElement;
+      const colorIndex = parseInt(target.dataset.color || '0', 10);
+      
+      colorButtons.forEach(btn => btn.classList.remove('active'));
+      target.classList.add('active');
+      
+      editor.setColor(colorIndex);
+    });
+  });
+};
+
+setupUIControls();
 
 // Handle window resize
 window.addEventListener('resize', () => {
