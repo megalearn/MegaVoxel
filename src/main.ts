@@ -68,20 +68,31 @@ requestAnimationFrame(() => {
 const setupUIControls = () => {
   // Mode buttons
   const modeButtons = document.querySelectorAll('.mode-btn');
+  const addButton = document.querySelector('[data-mode="add"]') as HTMLButtonElement;
+  const eraseButton = document.querySelector('[data-mode="erase"]') as HTMLButtonElement;
+  const colorButtons = document.querySelectorAll('.color-btn');
+
+  const setMode = (mode: 'add' | 'erase') => {
+    modeButtons.forEach(btn => btn.classList.remove('active'));
+    if (mode === 'add') {
+      addButton.classList.add('active');
+    } else {
+      eraseButton.classList.add('active');
+      // Deselect color when erase mode is chosen
+      colorButtons.forEach(btn => btn.classList.remove('active'));
+    }
+    editor.setMode(mode);
+  };
+
   modeButtons.forEach(button => {
     button.addEventListener('click', (e) => {
       const target = e.target as HTMLButtonElement;
       const mode = target.dataset.mode as 'add' | 'erase';
-      
-      modeButtons.forEach(btn => btn.classList.remove('active'));
-      target.classList.add('active');
-      
-      editor.setMode(mode);
+      setMode(mode);
     });
   });
 
   // Color buttons
-  const colorButtons = document.querySelectorAll('.color-btn');
   colorButtons.forEach(button => {
     button.addEventListener('click', (e) => {
       const target = e.target as HTMLButtonElement;
@@ -89,6 +100,9 @@ const setupUIControls = () => {
       
       colorButtons.forEach(btn => btn.classList.remove('active'));
       target.classList.add('active');
+      
+      // Automatically switch to add mode when color is selected
+      setMode('add');
       
       editor.setColor(colorIndex);
     });

@@ -25,3 +25,7 @@
 ## Bugs
 - [x] Voxel should not be added/erased on drag end
 - [x] Prevent more than one voxel to be added/removed at a time
+
+## More tweaks
+- [ ] Variable size color palette
+- [x] Automatically choose "Add mode" if a color is chosen (erase button deselects any selected color)
