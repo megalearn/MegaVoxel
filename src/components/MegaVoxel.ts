@@ -51,7 +51,7 @@ export class MegaVoxel extends THREE.Object3D {
     for (let x = 0; x < 9; x++) {
       for (let y = 0; y < 9; y++) {
         for (let z = 0; z < 9; z++) {
-          this.addVoxel(x, y, z, 0);
+          this.addVoxel(x, y, z, 0, false);
         }
       }
     }
@@ -126,7 +126,7 @@ export class MegaVoxel extends THREE.Object3D {
       const normal = intersection.face?.normal || new THREE.Vector3();
       const point = intersection.point.clone().add(normal.multiplyScalar(0.5));
       const voxelPos = this.worldToGrid(point);
-      this.addVoxel(voxelPos.x, voxelPos.y, voxelPos.z, this.currentColor);
+      this.addVoxel(voxelPos.x, voxelPos.y, voxelPos.z, this.currentColor, true);
     }
   }
 
@@ -145,7 +145,7 @@ export class MegaVoxel extends THREE.Object3D {
     );
   }
 
-  private addVoxel(x: number, y: number, z: number, colorIndex: number): void {
+  private addVoxel(x: number, y: number, z: number, colorIndex: number, notify: boolean = true): void {
     // Check bounds
     if (x < 0 || x >= 9 || y < 0 || y >= 9 || z < 0 || z >= 9) {
       console.log('Attempted to add voxel out of bounds:', x, y, z);
@@ -170,7 +170,9 @@ export class MegaVoxel extends THREE.Object3D {
     this.add(mesh);
     this.meshes.set(key, mesh);
 
-    this.notifyModelUpdate();
+    if (notify) {
+      this.notifyModelUpdate();
+    }
   }
 
   private removeVoxel(x: number, y: number, z: number): void {
