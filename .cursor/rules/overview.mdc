@@ -1,0 +1,63 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project overview
+
+We are building a super-simple voxel model editor called "MegaVoxel".
+The user can choose between 3 pre-configured colors (palette).
+The user can choose between two modes: add/erase.
+
+When creating a new model, the editor starts with a 9x9x9 block.
+Each voxel should have the initail color of the first color in the palette.
+The user can erase voxels to give stshape
+
+## Usage
+
+### Embedding
+
+```
+import { MegaVoxel } from megavoxel;
+const editor = new MegaVoxel(
+    palette: [0xff0000, 0x00ff00, 0x0000ff]
+    onModelUpdated: ...
+);
+scene.add(editor);
+```
+
+### Export
+
+The output format is JSON.
+
+```
+{
+    palette: ["0xff0000", "0x00ff00", "0x0000ff"],
+    voxels: [
+        {x: .., y: .., z: .., color: 0},
+        {x: .., y: .., z: .., color: 1},
+        {x: .., y: .., z: .., color: 2},
+    ]
+}
+```
+
+## Tech Stack
+
+- TypeScript
+- ThreeJS
+- Vite
+
+No other dependencies.
+
+## Input
+
+- Color picker consisting of 3 on-screen buttons
+- Mode picker (add/erase)
+- Mouse click/touch to add/remove voxels
+- Right-mouse button + drag rotates the camera around the center/model
+
+The editor should have a similar feel to building things in Minecraft.
+
+## Output
+
+A single static megavoxel.html and megavoxel.js file.
