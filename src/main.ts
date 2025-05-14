@@ -32,14 +32,13 @@ const controls = new CameraControls(camera, renderer.domElement);
 
 // Define the 8-color palette
 const palette = [
-  0xffffff, // white
-  0xff0000, // red
-  0x00ff00, // green
-  0x0000ff, // blue
-  0xffff00, // yellow
-  0xff00ff, // magenta
-  0x00ffff, // cyan
-  0x222222  // dark gray
+  0xF2F2F2, // light gray
+  0xFFA094, // light coral
+  0xFF425B, // red
+  0x7DB20A, // lime green
+  0x018E01, // green
+  0x026522, // dark green
+  0x020403  // almost black
 ];
 
 // Create editor instance
