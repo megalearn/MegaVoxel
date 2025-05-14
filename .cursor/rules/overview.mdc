@@ -26,6 +26,8 @@ const editor = new MegaVoxel(
 scene.add(editor);
 ```
 
+The onModelUpdated callback should be called when the user adds or deletes a voxel. It should not be called when the the initial model is loaded/created.
+
 ### Export
 
 The output format is JSON.
@@ -49,12 +51,28 @@ The output format is JSON.
 
 No other dependencies.
 
+## File structure
+
+MegaVoxel/
+├── src/
+│   ├── main.ts           # Main application entry point
+│   ├── MegaVoxel.ts      # Core voxel editor component
+│   └── CameraControls.ts # Camera orbit controls
+├── dist/                 # Build output directory
+│   ├── index.html
+│   └── megavoxel.js
+├── index.html           # Development entry point
+├── package.json         # Project dependencies and scripts
+├── tsconfig.json        # TypeScript configuration
+└── vite.config.ts      # Vite build configuration
+
 ## Input
 
 - Color picker consisting of on-screen buttons
 - Erase button (last item in the the color buttons list)
 - Mouse click/touch to add/remove voxels
-- Dragging rotates the camera around the center/model
+- Dragging rotates the camera around the center/model (orbit control)
+- Hovering over a voxel highlights it to help understand which voxel will be deleted/removed
 
 The editor should have a similar feel to building things in Minecraft.
 

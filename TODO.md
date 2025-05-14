@@ -31,3 +31,4 @@
 - [x] Automatically choose "Add mode" if a color is chosen (erase button deselects any selected color)
 - [x] Make background color part of the configuration/parameters, and change it to #FDF0EE
 - [x] Make the erase button the last item in the list of color buttons. Also remove the Add button.
+- [ ] Use ThreeJS to create the 

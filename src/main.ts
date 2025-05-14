@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { MegaVoxel } from './components/MegaVoxel';
-import { CameraControls } from './utils/CameraControls';
+import { MegaVoxel } from './MegaVoxel';
+import { CameraControls } from './CameraControls';
 
 // Initialize Three.js scene
 const scene = new THREE.Scene();
