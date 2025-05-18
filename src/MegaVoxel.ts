@@ -204,14 +204,38 @@ export class MegaVoxel extends THREE.Object3D {
     console.log('Removing voxel at:', x, y, z);
     const mesh = this.meshes.get(key);
     if (mesh) {
-      this.remove(mesh);
-      mesh.geometry.dispose();
-      (mesh.material as THREE.Material).dispose();
-      this.meshes.delete(key);
-    }
+      // Create animation for shrinking effect
+      const startTime = Date.now();
+      const duration = 200; // Animation duration in milliseconds
+      const startScale = 1;
+      const endScale = 0;
 
-    this.voxels.delete(key);    
-    this.notifyModelUpdate();
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Use easeOutQuad for smooth deceleration
+        const scale = startScale - (startScale - endScale) * (1 - Math.pow(1 - progress, 2));
+        mesh.scale.set(scale, scale, scale);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          // Remove the mesh after animation completes
+          this.remove(mesh);
+          mesh.geometry.dispose();
+          (mesh.material as THREE.Material).dispose();
+          this.meshes.delete(key);
+          this.voxels.delete(key);
+          this.notifyModelUpdate();
+        }
+      };
+
+      animate();
+    } else {
+      this.voxels.delete(key);
+      this.notifyModelUpdate();
+    }
   }
 
   private notifyModelUpdate(): void {
