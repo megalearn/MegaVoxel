@@ -66,14 +66,43 @@ requestAnimationFrame(() => {
 
 // Set up UI controls
 const setupUIControls = () => {
-  const colorButtons = document.querySelectorAll('.color-btn');
-  const eraseButton = document.querySelector('[data-mode="erase"]') as HTMLButtonElement;
+  const colorPaletteContainer = document.querySelector('.color-palette');
+  if (!colorPaletteContainer) {
+    console.error('Color palette container not found');
+    return;
+  }
+
+  // Clear existing buttons
+  colorPaletteContainer.innerHTML = '';
+
+  // Create color buttons
+  palette.forEach((color, index) => {
+    const button = document.createElement('button');
+    button.className = 'color-btn';
+    button.dataset.color = index.toString();
+    button.style.background = `#${color.toString(16).padStart(6, '0')}`;
+    colorPaletteContainer.appendChild(button);
+  });
+
+  // Create erase button
+  const eraseButton = document.createElement('button');
+  eraseButton.className = 'color-btn';
+  eraseButton.dataset.mode = 'erase';
+  eraseButton.innerHTML = '🗑️';
+  colorPaletteContainer.appendChild(eraseButton);
+
+  // Set initial active state
+  const firstColorButton = colorPaletteContainer.querySelector('[data-color="0"]') as HTMLButtonElement;
+  if (firstColorButton) {
+    firstColorButton.classList.add('active');
+  }
 
   const setMode = (mode: 'add' | 'erase', colorIndex?: number) => {
+    const colorButtons = colorPaletteContainer.querySelectorAll('.color-btn');
     colorButtons.forEach(btn => btn.classList.remove('active'));
     
     if (mode === 'add' && colorIndex !== undefined) {
-      const colorButton = document.querySelector(`[data-color="${colorIndex}"]`) as HTMLButtonElement;
+      const colorButton = colorPaletteContainer.querySelector(`[data-color="${colorIndex}"]`) as HTMLButtonElement;
       if (colorButton) colorButton.classList.add('active');
     } else if (mode === 'erase') {
       eraseButton.classList.add('active');
@@ -82,21 +111,18 @@ const setupUIControls = () => {
     editor.setMode(mode);
   };
 
-  // Color buttons
-  colorButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-      // Get the actual button element, even if a child element was clicked
-      const target = (e.target as HTMLElement).closest('.color-btn') as HTMLButtonElement;
-      if (!target) return;
-      
-      if (target.dataset.mode === 'erase') {
-        setMode('erase');
-      } else {
-        const colorIndex = parseInt(target.dataset.color || '0', 10);
-        setMode('add', colorIndex);
-        editor.setColor(colorIndex);
-      }
-    });
+  // Add click handlers
+  colorPaletteContainer.addEventListener('click', (e) => {
+    const target = (e.target as HTMLElement).closest('.color-btn') as HTMLButtonElement;
+    if (!target) return;
+    
+    if (target.dataset.mode === 'erase') {
+      setMode('erase');
+    } else {
+      const colorIndex = parseInt(target.dataset.color || '0', 10);
+      setMode('add', colorIndex);
+      editor.setColor(colorIndex);
+    }
   });
 };
 

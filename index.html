@@ -37,10 +37,21 @@
         border-color: yellow;
         box-shadow: 0 0 10px yellow;
       }
-      .color-grid {
+      .color-palette {
         display: grid;
         grid-template-columns: repeat(4, auto);
         gap: 10px;
+      }
+      .color-palette .color-btn[data-mode="erase"] {
+        grid-column: 1 / -1;
+        margin-top: 10px;
+        border-color: #ff4444;
+        background: #444 !important;
+        color: white;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       .no-select {
         user-select: none;
@@ -53,17 +64,8 @@
   <body>
     <div id="app"></div>
     <div id="controls">
-      <div class="color-grid">
-        <button class="color-btn active" data-color="0" style="background: #F2F2F2;"></button>
-        <button class="color-btn" data-color="1" style="background: #FFA094;"></button>
-        <button class="color-btn" data-color="2" style="background: #FF425B;"></button>
-        <button class="color-btn" data-color="3" style="background: #7DB20A;"></button>
-        <button class="color-btn" data-color="4" style="background: #018E01;"></button>
-        <button class="color-btn" data-color="5" style="background: #026522;"></button>
-        <button class="color-btn" data-color="6" style="background: #020403;"></button>
-        <button class="color-btn" data-mode="erase" style="background: #444; position: relative;">
-          <span class="no-select" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white;">✕</span>
-        </button>
+      <div class="color-palette">
+        <!-- Color buttons will be generated dynamically -->
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
