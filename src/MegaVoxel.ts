@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { InputHandler } from './InputHandler';
 
 interface VoxelData {
   x: number;
@@ -30,11 +31,9 @@ export class MegaVoxel extends THREE.Object3D {
   private mouse: THREE.Vector2;
   public domElement: HTMLElement;
   private camera: THREE.Camera;
-  private isDragging: boolean = false;
-  private dragStartPosition: { x: number; y: number } | null = null;
-  private readonly dragThreshold = 5; // pixels
   private hoveredMesh: THREE.Mesh | null = null;
   private originalEmissive: number | null = null;
+  private inputHandler: InputHandler;
 
   constructor(options: MegaVoxelOptions) {
     super();
@@ -55,7 +54,24 @@ export class MegaVoxel extends THREE.Object3D {
     } else {
       this.initializeGrid();
     }
-    this.setupInteraction();
+
+    this.inputHandler = new InputHandler({
+      element: this.domElement,
+      onPointerMove: (position) => {
+        this.mouse.copy(position);
+        this.updateHoverState();
+      },
+      onPointerDown: (position) => {
+        this.mouse.copy(position);
+      },
+      onPointerUp: (position) => {
+        this.mouse.copy(position);
+      },
+      onPointerClick: (position) => {
+        this.mouse.copy(position);
+        this.handleVoxelOperation();
+      }
+    });
   }
 
   private initializeGrid(): void {
@@ -90,35 +106,9 @@ export class MegaVoxel extends THREE.Object3D {
       console.error('No canvas element found for interaction setup');
       return;
     }
-
-    // Bind the methods to preserve 'this' context
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
-
-    this.domElement.addEventListener('mousedown', this.onMouseDown);
-    this.domElement.addEventListener('mousemove', this.onMouseMove);
-    this.domElement.addEventListener('mouseup', this.onMouseUp);
-    
-    console.log('Interaction setup complete');
   }
 
-  private updateMousePosition(event: MouseEvent): void {
-    if (!this.domElement) return;
-
-    const rect = this.domElement.getBoundingClientRect();
-    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-  }
-
-  private onMouseDown(event: MouseEvent): void {
-    this.isDragging = true;
-    this.dragStartPosition = { x: event.clientX, y: event.clientY };
-  }
-
-  private onMouseMove(event: MouseEvent): void {
-    this.updateMousePosition(event);
-    
+  private updateHoverState(): void {
     // Reset previous hover state
     if (this.hoveredMesh && this.originalEmissive !== null) {
       (this.hoveredMesh.material as THREE.MeshPhongMaterial).emissive.setHex(this.originalEmissive);
@@ -137,49 +127,25 @@ export class MegaVoxel extends THREE.Object3D {
     }
   }
 
-  private onMouseUp(event: MouseEvent): void {
-    if (!this.isDragging || !this.dragStartPosition) return;
-
-    // Calculate drag distance
-    const dx = event.clientX - this.dragStartPosition.x;
-    const dy = event.clientY - this.dragStartPosition.y;
-    const dragDistance = Math.sqrt(dx * dx + dy * dy);
-
-    // Only process as a click if the drag distance is small
-    if (dragDistance < this.dragThreshold) {
-      this.handleVoxelOperation();
-    }
-
-    this.isDragging = false;
-    this.dragStartPosition = null;
+  private getIntersection(): THREE.Intersection | null {
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const intersects = this.raycaster.intersectObjects(Array.from(this.meshes.values()), false);
+    return intersects[0] || null;
   }
 
   private handleVoxelOperation(): void {
-    console.log('Click event received');
-    // No need to update mouse position here as it's already updated in onMouseMove
     const intersection = this.getIntersection();
-    
-    console.log('Intersection:', intersection);
     if (!intersection) return;
 
     if (this.isEraseMode) {
-      console.log('Erasing voxel at position:', intersection.object.position);
       const voxelPos = this.worldToGrid(intersection.object.position);
       this.removeVoxel(voxelPos.x, voxelPos.y, voxelPos.z);
     } else {
-      console.log('Adding voxel at intersection point:', intersection.point);
       const normal = intersection.face?.normal || new THREE.Vector3();
       const point = intersection.point.clone().add(normal.multiplyScalar(0.5));
       const voxelPos = this.worldToGrid(point);
       this.addVoxel(voxelPos.x, voxelPos.y, voxelPos.z, this.currentColor, true);
     }
-  }
-
-  private getIntersection(): THREE.Intersection | null {
-    this.raycaster.setFromCamera(this.mouse, this.camera);
-    const intersects = this.raycaster.intersectObjects(Array.from(this.meshes.values()), false);
-    console.log('Raycaster intersections:', intersects);
-    return intersects[0] || null;
   }
 
   private worldToGrid(position: THREE.Vector3): THREE.Vector3 {
@@ -288,10 +254,8 @@ export class MegaVoxel extends THREE.Object3D {
   }
 
   public dispose(): void {
-    if (this.domElement) {
-      this.domElement.removeEventListener('mousedown', this.onMouseDown);
-      this.domElement.removeEventListener('mousemove', this.onMouseMove);
-      this.domElement.removeEventListener('mouseup', this.onMouseUp);
+    if (this.inputHandler) {
+      this.inputHandler.dispose();
     }
 
     // Reset hover state
