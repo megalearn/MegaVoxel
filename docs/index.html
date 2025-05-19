@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MegaVoxel Editor</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+      }
+      #app {
+        width: 100%;
+        height: 100%;
+      }
+      #controls {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 15px;
+        border-radius: 8px;
+        color: white;
+      }
+      .color-btn {
+        width: 30px;
+        height: 30px;
+        border: 2px solid white;
+        border-radius: 4px;
+        margin: 0;
+        cursor: pointer;
+      }
+      .color-btn.active {
+        border-color: yellow;
+        box-shadow: 0 0 10px yellow;
+      }
+      .color-palette {
+        display: grid;
+        grid-template-columns: repeat(4, auto);
+        gap: 10px;
+      }
+      .color-palette .color-btn[data-mode="erase"] {
+        grid-column: 1 / -1;
+        margin-top: 10px;
+        border: 2px solid white;
+        background: #444 !important;
+        color: white;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .no-select {
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+      }
+      .import-export {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+      }
+      .import-export button {
+        flex: 1;
+        padding: 8px;
+        border: 2px solid white;
+        border-radius: 4px;
+        background: #444;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .import-export button:hover {
+        background: #666;
+      }
+      #file-input {
+        display: none;
+      }
+    </style>
+    <script type="module" crossorigin src="./megavoxel.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="controls">
+      <div class="color-palette">
+        <!-- Color buttons will be generated dynamically -->
+      </div>
+      <div class="import-export">
+        <button id="export-btn">Export</button>
+        <input type="file" id="file-input" accept=".json">
+        <button id="import-btn">Import</button>
+      </div>
+    </div>
+  </body>
+</html> 
