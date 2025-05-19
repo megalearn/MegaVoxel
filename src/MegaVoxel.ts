@@ -7,10 +7,16 @@ interface VoxelData {
   color: number;
 }
 
+interface VoxelModel {
+  palette: string[];
+  voxels: VoxelData[];
+}
+
 interface MegaVoxelOptions {
   palette: number[];
   camera: THREE.Camera;
-  onModelUpdated: (model: { palette: string[], voxels: VoxelData[] }) => void;
+  onModelUpdated: (model: VoxelModel) => void;
+  initialModel?: VoxelModel;
 }
 
 export class MegaVoxel extends THREE.Object3D {
@@ -44,7 +50,11 @@ export class MegaVoxel extends THREE.Object3D {
     this.mouse = new THREE.Vector2();
     this.domElement = document.querySelector('canvas') as HTMLElement;
 
-    this.initializeGrid();
+    if (options.initialModel) {
+      this.loadModel(options.initialModel);
+    } else {
+      this.initializeGrid();
+    }
     this.setupInteraction();
   }
 
@@ -57,6 +67,22 @@ export class MegaVoxel extends THREE.Object3D {
         }
       }
     }
+  }
+
+  private loadModel(model: VoxelModel): void {
+    // Clear existing voxels
+    this.meshes.forEach(mesh => {
+      this.remove(mesh);
+      mesh.geometry.dispose();
+      (mesh.material as THREE.Material).dispose();
+    });
+    this.meshes.clear();
+    this.voxels.clear();
+
+    // Add new voxels
+    model.voxels.forEach(voxel => {
+      this.addVoxel(voxel.x, voxel.y, voxel.z, voxel.color, false);
+    });
   }
 
   public setupInteraction(): void {
@@ -239,11 +265,14 @@ export class MegaVoxel extends THREE.Object3D {
   }
 
   private notifyModelUpdate(): void {
-    const model = {
+    this.onModelUpdated(this.exportModel());
+  }
+
+  public exportModel(): VoxelModel {
+    return {
       palette: this.palette.map(color => `0x${color.toString(16)}`),
       voxels: Array.from(this.voxels.values())
     };
-    this.onModelUpdated(model);
   }
 
   public setColor(index: number): void {

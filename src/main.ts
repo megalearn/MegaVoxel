@@ -2,6 +2,12 @@ import * as THREE from 'three';
 import { MegaVoxel } from './MegaVoxel';
 import { CameraControls } from './CameraControls';
 
+// Define the VoxelModel interface
+interface VoxelModel {
+  palette: string[];
+  voxels: Array<{ x: number, y: number, z: number, color: number }>;
+}
+
 // Initialize Three.js scene
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xFDF0EE);
@@ -42,10 +48,10 @@ const palette = [
 ];
 
 // Create editor instance
-const editor = new MegaVoxel({
+let editor = new MegaVoxel({
   palette: palette,
   camera: camera,
-  onModelUpdated: (model: { palette: string[], voxels: Array<{ x: number, y: number, z: number, color: number }> }) => {
+  onModelUpdated: (model: VoxelModel) => {
     console.log('Model updated:', model);
   }
 });
@@ -127,6 +133,74 @@ const setupUIControls = () => {
 };
 
 setupUIControls();
+
+// Handle import/export
+const setupImportExport = () => {
+  const exportBtn = document.getElementById('export-btn');
+  const importBtn = document.getElementById('import-btn');
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+
+  if (!exportBtn || !importBtn || !fileInput) {
+    console.error('Import/export elements not found');
+    return;
+  }
+
+  exportBtn.addEventListener('click', () => {
+    const model = editor.exportModel();
+    const blob = new Blob([JSON.stringify(model, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'model.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  importBtn.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const model = JSON.parse(event.target?.result as string) as VoxelModel;
+        // Create a new editor instance with the imported model
+        const newEditor = new MegaVoxel({
+          palette: palette,
+          camera: camera,
+          onModelUpdated: (model: VoxelModel) => {
+            console.log('Model updated:', model);
+          },
+          initialModel: model
+        });
+        
+        // Replace the old editor with the new one
+        scene.remove(editor);
+        scene.add(newEditor);
+        editor = newEditor;
+        
+        // Update the canvas reference
+        const canvas = document.querySelector('canvas');
+        if (canvas) {
+          editor.domElement = canvas;
+          editor.setupInteraction();
+        }
+      } catch (error) {
+        console.error('Error importing model:', error);
+        alert('Error importing model. Please check the file format.');
+      }
+    };
+    reader.readAsText(file);
+  });
+};
+
+setupImportExport();
 
 // Handle window resize
 window.addEventListener('resize', () => {

@@ -59,6 +59,27 @@
         -moz-user-select: none;
         -ms-user-select: none;
       }
+      .import-export {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+      }
+      .import-export button {
+        flex: 1;
+        padding: 8px;
+        border: 2px solid white;
+        border-radius: 4px;
+        background: #444;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .import-export button:hover {
+        background: #666;
+      }
+      #file-input {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -66,6 +87,11 @@
     <div id="controls">
       <div class="color-palette">
         <!-- Color buttons will be generated dynamically -->
+      </div>
+      <div class="import-export">
+        <button id="export-btn">Export</button>
+        <input type="file" id="file-input" accept=".json">
+        <button id="import-btn">Import</button>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
