@@ -27,9 +27,10 @@
 - [x] Prevent more than one voxel to be added/removed at a time
 
 ## More tweaks
-- [ ] Variable size color palette
+- [x] Variable size color palette
 - [x] Automatically choose "Add mode" if a color is chosen (erase button deselects any selected color)
 - [x] Make background color part of the configuration/parameters, and change it to #FDF0EE
 - [x] Make the erase button the last item in the list of color buttons. Also remove the Add button.
 - [x] Effect when erasing voxels (make the erased block shrink away)
 - [x] Add import/export functionality
+- [ ] Fix issue where camera can not be controlled on touch devices

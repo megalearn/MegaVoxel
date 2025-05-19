@@ -28,7 +28,7 @@ scene.add(editor);
 
 The onModelUpdated callback should be called when the user adds or deletes a voxel. It should not be called when the the initial model is loaded/created.
 
-### Export
+### File format
 
 The output format is JSON.
 
@@ -73,9 +73,17 @@ MegaVoxel/
 - Mouse click/touch to add/remove voxels
 - Dragging rotates the camera around the center/model (orbit control)
 - Hovering over a voxel highlights it to help understand which voxel will be deleted/removed
+- Button to import a model JSON file
+- Button to export a model JSON file
+
+MegaVoxel should work on both desktop and touch devices.
 
 The editor should have a similar feel to building things in Minecraft.
 
 ## Output
 
 A single static megavoxel.html and megavoxel.js file.
+
+## Design
+
+When deleting a voxel, it should do so with a "shrink out" animation
